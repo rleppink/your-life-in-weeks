@@ -15,10 +15,10 @@ main :: IO ()
 main = do
   today <- fmap utctDay getCurrentTime
 
-  let diff = diffDays today (fromGregorian 1989 03 12)
-  let weeksAlive = weeks $ fromIntegral $ diff
+  let dayDiff = diffDays today (fromGregorian 1989 03 12)
+  let weeksAlive = weeks $ fromIntegral dayDiff
 
-  mainWith $ (lifeDiagram weeksAlive) # bgFrame 1 white
+  mainWith $ lifeDiagram weeksAlive # bgFrame 1 white
 
 
 lifeDiagram :: Int -> Diagram B
