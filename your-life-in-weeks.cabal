@@ -1,8 +1,8 @@
-name:                simple-toothbrush
+name:                your-life-in-weeks
 version:             0.1.0.0
 -- synopsis:
 -- description:
-homepage:            https://github.com/rleppink/simple-toothbrush#readme
+homepage:            https://github.com/rleppink/your-life-in-weeks#readme
 license:             BSD3
 license-file:        LICENSE
 author:              Ronald Leppink
@@ -13,12 +13,12 @@ build-type:          Simple
 cabal-version:       >=1.10
 extra-source-files:  README.md
 
-executable simple-toothbrush
+executable your-life-in-weeks
   hs-source-dirs:      src
   main-is:             Main.hs
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5
                      , diagrams-lib
                      , diagrams-svg
-                     , Rasterific
+                     , diagrams-rasterific
                      , time

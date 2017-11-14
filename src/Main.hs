@@ -8,27 +8,28 @@ module Main where
 import Data.Time
 
 import Diagrams.Prelude
-import Diagrams.Backend.SVG.CmdLine
+import Diagrams.Backend.Rasterific.CmdLine
 
 
 main :: IO ()
 main = do
   today <- fmap utctDay getCurrentTime
 
-  let weeksAlive =
-        weeksTillNow $
-        fromIntegral $
-        diffDays today (fromGregorian 1989 03 12)
+  let diff = diffDays today (fromGregorian 1989 03 12)
+  let weeksAlive = weeks $ fromIntegral $ diff
 
-  mainWith $
+  mainWith $ (lifeDiagram weeksAlive) # bgFrame 1 white
+
+
+lifeDiagram :: Int -> Diagram B
+lifeDiagram x =
     vsep sepDist $
-        replicate (filledYears weeksAlive) (hsep sepDist filledYear) ++
-        [hsep sepDist (partialYear (mod weeksAlive 52))] ++
-        replicate (emptyYears weeksAlive) (hsep sepDist emptyYear)
-        
+        replicate (filledYears x) (hsep sepDist filledYear) ++
+        [hsep sepDist (partialYear (mod x 52))] ++
+        replicate (emptyYears x) (hsep sepDist emptyYear)
 
-weeksTillNow :: Int -> Int
-weeksTillNow x
+weeks :: Int -> Int
+weeks x
   | remainder > 3 = divided + 1
   | otherwise     = divided
   where divided   = fst $ divMod x 7
