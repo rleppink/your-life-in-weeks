@@ -25,5 +25,5 @@ Set the amount of weeks to display per line. [Default: 52]
 
 ## Examples
 
-`brave-toothbrush '12-03-1989'` 
+`yliw '12-03-1989'` 
 Generate the image using default settings for birthdate 12-03-1989.

@@ -13,7 +13,7 @@ build-type:          Simple
 cabal-version:       >=1.10
 extra-source-files:  README.md
 
-executable your-life-in-weeks
+executable yliw
   hs-source-dirs:      src
   main-is:             Main.hs
   default-language:    Haskell2010
@@ -21,4 +21,5 @@ executable your-life-in-weeks
                      , diagrams-lib
                      , diagrams-svg
                      , diagrams-rasterific
+                     , optparse-generic
                      , time

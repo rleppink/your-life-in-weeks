@@ -1,6 +1,12 @@
+{-# LANGUAGE DataKinds                 #-}
+{-# LANGUAGE DeriveGeneric             #-}
 {-# LANGUAGE FlexibleContexts          #-}
+{-# LANGUAGE FlexibleInstances         #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE OverloadedStrings         #-}
+{-# LANGUAGE StandaloneDeriving        #-}
 {-# LANGUAGE TypeFamilies              #-}
+{-# LANGUAGE TypeOperators             #-}
 
 module Main where
 
@@ -10,27 +16,43 @@ import           Data.Time
 import           Diagrams.Backend.Rasterific.CmdLine
 import           Diagrams.Prelude
 
+import           Options.Generic
+
 import           System.Environment
+
+
+data Arguments w = Arguments
+  { endDate      :: w ::: Maybe String <?> "Provide the end date to calculate the weeks from. [Default: weeks to be 90 years of age.]"
+  , totalYears   :: w ::: Maybe Int    <?> "Provide the total number of years to calculate the weeks from. [Default: weeks to be 90 years of age.]"
+  , totalWeeks   :: w ::: Maybe Int    <?> "Provide the total number of weeks to calculate the weeks from. [Default: weeks to be 90 years of age.]"
+  , weeksPerLine :: w ::: Maybe Int    <?> "Set the amount of weeks to display per line. [Default: 52]"
+  } deriving (Generic)
+
+instance ParseRecord (Arguments Options.Generic.Wrapped)
+deriving instance Show (Arguments Options.Generic.Unwrapped)
 
 
 main :: IO ()
 main = do
   today <- fmap utctDay getCurrentTime
-  args <- getArgs
-
-  let dateArg =
-        parseTimeOrError
-            True
-            defaultTimeLocale
-            (iso8601DateFormat Nothing)
-            (head args)
-            :: Day
 
 
-  let dayDiff = fromIntegral $ diffDays today dateArg
+  -- let dateArg =
+        -- parseTimeOrError
+            -- True
+            -- defaultTimeLocale
+            -- (iso8601DateFormat Nothing)
+            -- (head args)
+            -- :: Day
 
-  mainWith $
-    lifeDiagram (weeks dayDiff) 90 # bgFrame 1 white
+
+  -- let dayDiff = fromIntegral $ diffDays today dateArg
+
+  args  <- unwrapRecord "Your Life In Weeks"
+  print (args :: Arguments Options.Generic.Unwrapped)
+
+  -- mainWith $
+    -- lifeDiagram (weeks dayDiff) 90 # bgFrame 1 white
 
 
 lifeDiagram :: Int -> Int -> Diagram B
