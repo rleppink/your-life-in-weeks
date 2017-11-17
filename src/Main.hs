@@ -28,7 +28,11 @@ data Arguments w = Arguments
   , weeksPerLine :: w ::: Maybe Int    <?> "Set the amount of weeks to display per line. [Default: 52]"
   } deriving (Generic)
 
+modifiers :: Modifiers
+modifiers = lispCaseModifiers { shortNameModifier = firstLetter }
+
 instance ParseRecord (Arguments Options.Generic.Wrapped)
+  where parseRecord = parseRecordWithModifiers modifiers
 deriving instance Show (Arguments Options.Generic.Unwrapped)
 
 
