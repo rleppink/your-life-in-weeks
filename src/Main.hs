@@ -22,10 +22,12 @@ import           System.Environment
 
 
 data Arguments w = Arguments
-  { endDate      :: w ::: Maybe String <?> "Provide the end date to calculate the weeks from. [Default: weeks to be 90 years of age.]"
-  , totalYears   :: w ::: Maybe Int    <?> "Provide the total number of years to calculate the weeks from. [Default: weeks to be 90 years of age.]"
-  , totalWeeks   :: w ::: Maybe Int    <?> "Provide the total number of weeks to calculate the weeks from. [Default: weeks to be 90 years of age.]"
-  , weeksPerLine :: w ::: Maybe Int    <?> "Set the amount of weeks to display per line. [Default: 52]"
+  { startDate    :: w ::: String       <?> "The start date to calculate the weeks from. [Mandatory. No default.]"
+  , endDate      :: w ::: Maybe String <?> "The end date to calculate the weeks from. [Optional. Default: weeks to be 90 years of age.]"
+  , years        :: w ::: Maybe Int    <?> "The total number of years to calculate the weeks from. [Optional. Default: weeks to be 90 years of age.]"
+  , weeks        :: w ::: Maybe Int    <?> "The total number of weeks to calculate the weeks from. [Optional. Default: weeks to be 90 years of age.]"
+  , lineLength   :: w ::: Maybe Int    <?> "The amount of weeks to display per line. [Optional. Default: 52, a year]"
+  , yearStart    :: w ::: Bool         <?> "Start the diagram at the start of the start date's year, instead of at the start date. [Optional. Default: False]"
   } deriving (Generic)
 
 modifiers :: Modifiers
@@ -40,6 +42,9 @@ main :: IO ()
 main = do
   today <- fmap utctDay getCurrentTime
 
+  args  <- unwrapRecord "Your Life In Weeks"
+  print (args :: Arguments Options.Generic.Unwrapped)
+
 
   -- let dateArg =
         -- parseTimeOrError
@@ -49,14 +54,10 @@ main = do
             -- (head args)
             -- :: Day
 
-
   -- let dayDiff = fromIntegral $ diffDays today dateArg
 
-  args  <- unwrapRecord "Your Life In Weeks"
-  print (args :: Arguments Options.Generic.Unwrapped)
-
   -- mainWith $
-    -- lifeDiagram (weeks dayDiff) 90 # bgFrame 1 white
+    -- lifeDiagram (div dayDiff 7) 90 # bgFrame 1 white
 
 
 lifeDiagram :: Int -> Int -> Diagram B
@@ -65,9 +66,6 @@ lifeDiagram x y =
         replicate (yearsAlive x) (hsep sepDist filledYear) ++
         [hsep sepDist (partialYear (mod x 52))] ++
         replicate (yearsMax x y) (hsep sepDist emptyYear)
-
-weeks :: Int -> Int
-weeks x = div x 7
 
 sepDist :: Double
 sepDist = 0.8

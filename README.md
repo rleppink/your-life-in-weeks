@@ -7,23 +7,27 @@ image for your life by providing your birthday. Optionally provide the end date,
 total years or weeks.
 
 ## Flags
+### --start-date, -s
+The start date to calculate the weeks from. [Mandatory. No default.]
+
 ### --end-date, -e
-Provide the end date to calculate the weeks from. [Default: weeks to be 90 years
-of age.]
+The end date to calculate the weeks from. [Optional. Default: weeks to be 90 years of age.]
 
-### --total-years, -y
-Provide the total number of years to calculate the weeks from. [Default: weeks
-to be 90 years of age.]
+### --years, -y
+The total number of years to calculate the weeks from. [Optional. Default: weeks to be 90 years of age.]
 
-### --total-weeks, -w
-Provide the total number of weeks to calculate the weeks from. [Default: weeks
-to be 90 years of age.]
+### --weeks, -w
+The total number of weeks to calculate the weeks from. [Optional. Default: weeks to be 90 years of age.]
 
-### --weeks-per-line, -l
-Set the amount of weeks to display per line. [Default: 52]
+### --lineLength, -l
+The amount of weeks to display per line. [Optional. Default: 52, a year]
+
+### --yearStart, -y
+Start the diagram at the start of the start date's year, instead of at the start date. [Optional. Default: False]
 
 
-## Examples
-
+## Usage examples
 `yliw "12-03-1989"` 
 Generate the image using default settings for birthdate 12-03-1989.
+
+**TODO**
