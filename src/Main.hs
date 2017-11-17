@@ -13,12 +13,10 @@ module Main where
 
 import           Data.Time
 
-import           Diagrams.Backend.Rasterific.CmdLine
+import           Diagrams.Backend.Rasterific
 import           Diagrams.Prelude
 
 import           Options.Generic
-
-import           System.Environment
 
 
 data Arguments w = Arguments
@@ -41,23 +39,22 @@ deriving instance Show (Arguments Options.Generic.Unwrapped)
 main :: IO ()
 main = do
   today <- fmap utctDay getCurrentTime
-
   args  <- unwrapRecord "Your Life In Weeks"
-  print (args :: Arguments Options.Generic.Unwrapped)
 
+  let startDateArg =
+        parseTimeOrError
+             True
+             defaultTimeLocale
+             (iso8601DateFormat Nothing)
+             (startDate args)
+             :: Day
 
-  -- let dateArg =
-        -- parseTimeOrError
-            -- True
-            -- defaultTimeLocale
-            -- (iso8601DateFormat Nothing)
-            -- (head args)
-            -- :: Day
+  let dayDiff = fromIntegral $ diffDays today startDateArg
 
-  -- let dayDiff = fromIntegral $ diffDays today dateArg
-
-  -- mainWith $
-    -- lifeDiagram (div dayDiff 7) 90 # bgFrame 1 white
+  renderRasterific
+    (diagramName (startDate args))
+    (mkWidth 500)
+    (lifeDiagram (div dayDiff 7) 90  # bgFrame 1 white)
 
 
 lifeDiagram :: Int -> Int -> Diagram B
@@ -66,6 +63,11 @@ lifeDiagram x y =
         replicate (yearsAlive x) (hsep sepDist filledYear) ++
         [hsep sepDist (partialYear (mod x 52))] ++
         replicate (yearsMax x y) (hsep sepDist emptyYear)
+
+
+-- | Generate a diagram filename from given arguments
+diagramName :: String -> String
+diagramName x = x ++ ".png"
 
 sepDist :: Double
 sepDist = 0.8
