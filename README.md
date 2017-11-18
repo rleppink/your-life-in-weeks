@@ -25,6 +25,9 @@ The amount of weeks to display per line. [Optional. Default: 52, a year]
 ### --yearStart, -y
 Start the diagram at the start of the start date's year, instead of at the start date. [Optional. Default: False]
 
+### --diagramHeight, -d
+Height of the diagram. [Optional. Default: 500]
+
 
 ## Usage examples
 `yliw "12-03-1989"` 

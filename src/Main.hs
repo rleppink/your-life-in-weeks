@@ -27,7 +27,7 @@ data Arguments w = Arguments
   , weeks         :: w ::: Maybe Int    <?> "Total number of weeks to calculate the weeks from. [Optional. Default: weeks to be 90 years of age.]"
   , lineLength    :: w ::: Maybe Int    <?> "Amount of weeks to display per line. [Optional. Default: 52, a year]"
   , yearStart     :: w ::: Bool         <?> "Start the diagram at the start of the start date's year, instead of at the start date. [Optional. Default: False]"
-  , diagramHeight :: w ::: Maybe Double <?> "Height of the diagram"
+  , diagramHeight :: w ::: Maybe Double <?> "Height of the diagram. [Optional. Default: 500]"
   } deriving (Generic)
 
 modifiers :: Modifiers
