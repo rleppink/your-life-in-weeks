@@ -11,6 +11,7 @@
 module Main where
 
 
+import           Data.Maybe
 import           Data.Time
 
 import           Diagrams.Backend.Rasterific
@@ -20,12 +21,13 @@ import           Options.Generic
 
 
 data Arguments w = Arguments
-  { startDate    :: w ::: String       <?> "The start date to calculate the weeks from. [Mandatory. No default.]"
-  , endDate      :: w ::: Maybe String <?> "The end date to calculate the weeks from. [Optional. Default: weeks to be 90 years of age.]"
-  , years        :: w ::: Maybe Int    <?> "The total number of years to calculate the weeks from. [Optional. Default: weeks to be 90 years of age.]"
-  , weeks        :: w ::: Maybe Int    <?> "The total number of weeks to calculate the weeks from. [Optional. Default: weeks to be 90 years of age.]"
-  , lineLength   :: w ::: Maybe Int    <?> "The amount of weeks to display per line. [Optional. Default: 52, a year]"
-  , yearStart    :: w ::: Bool         <?> "Start the diagram at the start of the start date's year, instead of at the start date. [Optional. Default: False]"
+  { startDate     :: w ::: String       <?> "Start date to calculate the weeks from. [Mandatory. No default.]"
+  , endDate       :: w ::: Maybe String <?> "End date to calculate the weeks from. [Optional. Default: weeks to be 90 years of age.]"
+  , years         :: w ::: Maybe Int    <?> "Total number of years to calculate the weeks from. [Optional. Default: weeks to be 90 years of age.]"
+  , weeks         :: w ::: Maybe Int    <?> "Total number of weeks to calculate the weeks from. [Optional. Default: weeks to be 90 years of age.]"
+  , lineLength    :: w ::: Maybe Int    <?> "Amount of weeks to display per line. [Optional. Default: 52, a year]"
+  , yearStart     :: w ::: Bool         <?> "Start the diagram at the start of the start date's year, instead of at the start date. [Optional. Default: False]"
+  , diagramHeight :: w ::: Maybe Double <?> "Height of the diagram"
   } deriving (Generic)
 
 modifiers :: Modifiers
@@ -43,17 +45,17 @@ main = do
 
   let startDateArg =
         parseTimeOrError
-             True
-             defaultTimeLocale
-             (iso8601DateFormat Nothing)
-             (startDate args)
-             :: Day
+          True
+          defaultTimeLocale
+          (iso8601DateFormat Nothing)
+          (startDate args)
+            :: Day
 
   let dayDiff = fromIntegral $ diffDays today startDateArg
 
   renderRasterific
-    (diagramName (startDate args))
-    (mkWidth 500)
+    (startDate args ++ ".png")
+    (mkHeight (fromMaybe (500 :: Double) (diagramHeight args)))
     (lifeDiagram (div dayDiff 7) 90  # bgFrame 1 white)
 
 
@@ -64,10 +66,6 @@ lifeDiagram x y =
         [hsep sepDist (partialYear (mod x 52))] ++
         replicate (yearsMax x y) (hsep sepDist emptyYear)
 
-
--- | Generate a diagram filename from given arguments
-diagramName :: String -> String
-diagramName x = x ++ ".png"
 
 sepDist :: Double
 sepDist = 0.8
